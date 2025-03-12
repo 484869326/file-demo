@@ -1,0 +1,21 @@
+{
+  "name": "file-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "concat-files": "^0.1.1",
+    "express": "^4.15.2",
+    "formidable": "^1.0.15",
+    "fs-extra": "^5.0.0",
+    "jquery": "^3.7.1",
+    "opn": "^5.1.0",
+    "spark-md5": "^3.0.2"
+  },
+  "scripts": {
+    "dev": "node upload.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
