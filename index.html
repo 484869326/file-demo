@@ -27,7 +27,6 @@
             width: 0%;
             height: 100%;
             background-color: #4CAF50;
-            transition: width 0.3s ease;
         }
 
         .status {
@@ -200,7 +199,7 @@
             }
 
             const result = await api.checkFileMD5(state.file.name, state.fileHash)
-            if (result.file) {
+            if (result.file.isExist) {
                 ui.updateProgress(state.chunks.length, state.chunks.length)
                 ui.setUploadComplete()
                 return
@@ -230,11 +229,15 @@
     // 事件监听
     elements.fileInput.addEventListener('change', (e) => {
         const targetFile = e.target.files[0]
+        elements.progress.style.transition = 'none'
+        ui.updateProgress(0, 1)
         if (!targetFile) {
             ui.updateStatus('请选择文件')
-            ui.updateProgress(0, 1)
             return
         }
+        setTimeout(() => {
+            elements.progress.style.transition = 'width 0.3s ease'
+        }, 100)
         state.file = targetFile
         state.chunks = null
         state.fileHash = null

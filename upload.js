@@ -24,7 +24,7 @@ app.all('*', (req, res, next) => {
     else next()
 })
 
-app.get('/', function(req, resp) {
+app.get('/', function (req, resp) {
     let query = req.query
     resp.send('success!!')
 })
@@ -82,7 +82,7 @@ app.all('/upload', (req, resp) => {
     var form = new formidable.IncomingForm({
         uploadDir: 'nodeServer/tmp'
     })
-    form.parse(req, function(err, fields, file) {
+    form.parse(req, function (err, fields, file) {
         let index = fields.index
         let total = fields.total
         let fileMd5Value = fields.fileMd5Value
@@ -134,7 +134,6 @@ app.all('/upload', (req, resp) => {
 async function getChunkList(filePath, folderPath, callback) {
     let isFileExit = await isExist(filePath)
     let result = {}
-    // 如果文件(文件名, 如:node-v7.7.4.pkg)已在存在, 不用再继续上传, 真接秒传
     if (isFileExit) {
         result = {
             stat: 1,
@@ -196,8 +195,8 @@ async function mergeFiles(srcDir, targetDir, newFileName, size) {
     console.log(...arguments)
     let targetStream = fs.createWriteStream(path.join(targetDir, newFileName))
     let fileArr = await listDir(srcDir)
-    fileArr.sort((x,y) => {
-        return x-y;
+    fileArr.sort((x, y) => {
+        return x - y;
     })
     // 把文件名加上文件夹的前缀
     for (let i = 0; i < fileArr.length; i++) {
@@ -208,7 +207,24 @@ async function mergeFiles(srcDir, targetDir, newFileName, size) {
         console.log('Merge Success!')
     })
 }
+// 确保临时文件夹存在
+const ensureTmpDir = () => {
+    const tmpDir = path.join(__dirname, 'nodeServer', 'tmp');
+    if (!fs.existsSync(tmpDir)) {
+        try {
+            fs.mkdirSync(tmpDir, { recursive: true });
+            console.log('临时文件夹创建成功：', tmpDir);
+        } catch (err) {
+            console.error('创建临时文件夹失败：', err);
+            process.exit(1); // 如果创建失败，终止服务启动
+        }
+    } else {
+        console.log('临时文件夹已存在：', tmpDir);
+    }
+}
 
+// 启动服务前检查
+ensureTmpDir();
 app.listen(5000, () => {
     console.log('服务启动完成，端口监听5000！')
     opn('http://localhost:5000')
